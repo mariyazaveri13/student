@@ -59,6 +59,12 @@ const StudentSchema = new mongoose.Schema({
     max: 100,
     required: true,
   },
+  result: {
+    type: Number,
+    min: 0,
+    max: 300,
+    required: true,
+  },
   comments: {
     type: String,
   },
