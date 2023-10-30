@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
-
+//todo::
+//Aggregate
+//Sort
+//filter
+//case insesitive search on db
+//search
+//a backend check for hobbies
 const StudentSchema = new mongoose.Schema({
   name: {
     type: String,
