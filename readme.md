@@ -48,3 +48,26 @@ get with advanced filter
 post
 put 
 delete
+
+----------------
+
+Search :
+
+	Name
+	Email
+	enrollmentnum
+	
+Sort :
+	
+	Name,
+	Result,
+	CreatedAt
+	
+Filter:
+	
+	Filter marks less than entered
+	Filter marks more than entered
+	Filter date more than and less than
+
+
+

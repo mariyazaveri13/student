@@ -22,7 +22,7 @@ field list -
 	paper 1 - number >= 100
 	paper 2 - number >= 100
 	paper 3 - number >= 100
-
+	result
 additional validation p1 + p2 + p3 <= 300
 All are mandatory 
 After add is finished, show alert with success / failure msg
@@ -48,3 +48,26 @@ get with advanced filter
 post
 put 
 delete
+
+----------------
+
+Search :
+
+	Name
+	Email
+	enrollmentnum
+	
+Sort :
+	
+	Name,
+	Result,
+	CreatedAt
+	
+Filter:
+	
+	Filter marks less than entered
+	Filter marks more than entered
+	Filter semester more than and less than
+
+
+

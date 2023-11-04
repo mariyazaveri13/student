@@ -74,7 +74,6 @@ export default function AddStudent() {
       paper1,
       paper2,
       paper3,
-      result,
     } = state;
 
     //checking mandatory fields

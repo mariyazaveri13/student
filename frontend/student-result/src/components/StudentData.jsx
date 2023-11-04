@@ -5,6 +5,13 @@ import axios from 'axios';
 export default function StudentData() {
   const [state, setState] = useState({
     students: [],
+    id: '',
+    name: '',
+    comments: '',
+    email: '',
+    gender: '',
+    hobbies: [],
+    semester: '',
   });
 
   useEffect(() => {
@@ -18,7 +25,7 @@ export default function StudentData() {
         ...prevState,
         students: res.data.students,
       }));
-      console.log(res);
+      console.log(res.data);
     } catch (error) {
       console.log(error);
       alert(error.message);
@@ -32,9 +39,46 @@ export default function StudentData() {
     })} ${d.getFullYear()}`;
   }
 
+  function formatDateforDateBox(date) {
+    const d = new Date(date);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function handleChange(e) {
+    const { name, type, value, checked } = e.target;
+    if (type == 'checkbox') {
+      if (checked) {
+        setState((preState) => {
+          return {
+            ...preState,
+            hobbies: [...preState.hobbies, value],
+          };
+        });
+      } else {
+        setState((preState) => {
+          return {
+            ...preState,
+            hobbies: preState.hobbies.filter((hobby) => hobby !== value),
+          };
+        });
+      }
+    } else {
+      setState((preState) => {
+        return {
+          ...preState,
+          [name]: type == 'number' ? Number(value) : value,
+        };
+      });
+    }
+  }
+
   return (
     <>
       <h1>This is student data</h1>
+
       <table border="1">
         <thead>
           <tr>
@@ -65,7 +109,7 @@ export default function StudentData() {
                     type="date"
                     name="birthdate"
                     id="birthdate"
-                    value={stud.birthdate}
+                    value={formatDateforDateBox(stud.birthdate)}
                   />
                 </td>
                 <td>
@@ -81,7 +125,7 @@ export default function StudentData() {
                   <input
                     type="radio"
                     value="Male"
-                    name="gender"
+                    name={'gender' + stud._id}
                     checked={stud.gender === 'Male'}
                     onChange={(e) => {}}
                   ></input>
@@ -90,7 +134,7 @@ export default function StudentData() {
                     onChange={(e) => {}}
                     type="radio"
                     value="Female"
-                    name="gender"
+                    name={'gender' + stud._id}
                     checked={stud.gender === 'Female'}
                   ></input>
                   <label>Female</label>
@@ -152,32 +196,35 @@ export default function StudentData() {
                   </select>
                 </td>
                 <td>
-                  <input
+                  {/* <input
                     style={{ width: '40px' }}
                     type="number"
                     name="paper1"
                     id="paper1"
                     value={stud.paper1}
-                  />
+                  /> */}
+                  {stud.paper1}
                 </td>
                 <td>
-                  <input
+                  {/* <input
                     style={{ width: '40px' }}
                     type="number"
                     name="paper2"
                     id="paper2"
                     value={stud.paper2}
-                  />
+                  /> */}
+                  {stud.paper2}
                 </td>
                 <td>
-                  <input
+                  {/* <input
                     style={{ width: '40px' }}
                     type="number"
                     name="paper3"
                     id="paper3"
                     max={100}
                     value={stud.paper3}
-                  />
+                  /> */}
+                  {stud.paper3}
                 </td>
                 <td>{stud.result}</td>
                 <td>
