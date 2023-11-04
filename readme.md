@@ -1,73 +1,85 @@
--------------FRONT END----------------
+# Student CRUD
 
-First page
+Student CRUD operation.
 
-list of students with name email enrollmentnum gender hobbies semester result(sent from backend)
-edit - comments
-delete
-filters and sort
-reset btn
-search btn
+Minimal Application that consists of a page for detailed overview of students, a page for Adding, updating and deleting students and a page for usefull insights about students.
 
-Second page
+Features:
 
-Post req
-field list -
-	name - only str with space
-	email - unique
-	enrollmentnum - only number + unique
-	gender - radio
-	hobbies - checkbox
-	semester - dropdown
-	paper 1 - number >= 100
-	paper 2 - number >= 100
-	paper 3 - number >= 100
-	result
-additional validation p1 + p2 + p3 <= 300
-All are mandatory 
-After add is finished, show alert with success / failure msg
-	
------------BACK END------------------
+- Advanced Search
+- Sort
+- Filteration of data
+
+## Tech Stack
+
+- MERN - MongoDB, Express, React, Node
+- HTML
+
+## Backend
 
 DB design
 
-	name - only str with space
-	email - unique
-	enrollmentnum - only number + unique
-	gender - radio
-	hobbies - checkbox
-	semester - dropdown
-	paper 1 - number >= 100
-	paper 2 - number >= 100
-	paper 3 - number >= 100
-	comments 
-	
-methods
+    name - only string with space
+    email - unique
+    birthdate - date
+    enrollmentnum - only number + unique
+    gender - radio
+    hobbies - checkbox
+    semester - dropdown
+    paper 1 - number >= 100
+    paper 2 - number >= 100
+    paper 3 - number >= 100
+    result
+    comments
+    createdAt
 
-get with advanced filter
-post
-put 
-delete
+## Frontend
 
-----------------
+### Home page
+
+Show List of students
+
+Update and Delete functionality.
+
+On update and Delete run validations on Frontend and backend and show alert appropriately.
+
+Sort :
+Name
+Result
+CreatedAt
 
 Search :
 
-	Name
-	Email
-	enrollmentnum
-	
-Sort :
-	
-	Name,
-	Result,
-	CreatedAt
-	
+    Name
+    Email
+    enrollmentnum
+
 Filter:
-	
-	Filter marks less than entered
-	Filter marks more than entered
-	Filter date more than and less than
+Filter marks less than and more than entered
+Filter date more than and less than
 
+### Add students page
 
+Field list -
 
+    name - only str with space
+    email - unique
+    enrollmentnum - only number + unique
+    gender - radio
+    hobbies - checkbox
+    semester - dropdown
+    paper 1 - number >= 100
+    paper 2 - number >= 100
+    paper 3 - number >= 100
+
+Additional validation p1 + p2 + p3 <= 300
+
+All fields are mandatory
+
+Post response, show alert with success / failure message
+
+### View Insights Page
+
+Show Highest marks in Paper 1, Paper 2, Paper 3 and Result.
+
+Show who has highest hobbies.
