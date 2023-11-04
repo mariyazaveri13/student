@@ -19,11 +19,13 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
+    //todo validate marks from 300
+
     const result = req.body.paper1 + req.body.paper2 + req.body.paper3;
     req.body.result = result;
     const student = await Student.create(req.body);
     res.status(201).json({
-      message: 'Student created',
+      message: `Student created with Id ${student._id}`,
       student,
     });
   } catch (error) {
