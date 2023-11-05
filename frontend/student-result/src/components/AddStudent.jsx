@@ -1,22 +1,34 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-export default function AddStudent() {
+export default function AddStudent(props) {
+  const location = useLocation();
+  const { student } =
+    location && location.state !== null ? location.state : { student: {} };
   const [state, setState] = useState({
-    name: '',
-    birthdate: '',
-    email: '',
-    enrollmentnum: '',
-    gender: 'Female',
-    hobbies: [],
-    semester: 1,
-    paper1: '',
-    paper2: '',
-    paper3: '',
+    name: student.name ? student.name : '',
+    birthdate: student.birthdate ? formatDateforDateBox(student.birthdate) : '',
+    email: student.email ? student.email : '',
+    enrollmentnum: student.enrollmentnum ? student.enrollmentnum : '',
+    gender: student ? student.gender : 'Female',
+    hobbies: student.hobbies ? student.hobbies : [],
+    semester: student.semester ? student.semester : 1,
+    paper1: student.paper1 ? student.paper1 : '',
+    paper2: student.paper2 ? student.paper2 : '',
+    paper3: student.paper3 ? student.paper3 : '',
     result: '',
+    id: student._id ? student._id : '',
+    comments: student.comments ? student.comments : '',
   });
 
+  function formatDateforDateBox(date) {
+    const d = new Date(date);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(d.getDate()).padStart(2, '0')}`;
+  }
   function containsNumbers(str) {
     //return /\d/.test(str);
     return /^[0-9]*$/.test(str);
@@ -56,7 +68,6 @@ export default function AddStudent() {
         };
       });
     }
-    console.log(state);
   }
 
   function handleSubmit(e) {
@@ -74,6 +85,7 @@ export default function AddStudent() {
       paper1,
       paper2,
       paper3,
+      comments,
     } = state;
 
     //checking mandatory fields
@@ -127,6 +139,7 @@ export default function AddStudent() {
       paper1: state.paper1,
       paper2: state.paper2,
       paper3: state.paper3,
+      comments: state.comments,
     };
 
     obj.result = parseInt(obj.paper1 + obj.paper2 + obj.paper3);
@@ -141,13 +154,21 @@ export default function AddStudent() {
       alert('Issues with your result pls check');
       return;
     }
-
     sendData(obj);
   }
 
   async function sendData(obj) {
     try {
-      const data = await axios.post('http://localhost:5000/students', obj);
+      let data = {};
+      if (!state.id) {
+        data = await axios.post('http://localhost:5000/students', obj);
+      } else {
+        data = await axios.patch(
+          `http://localhost:5000/students/${state.id}`,
+          obj
+        );
+      }
+
       alert(data.data.message);
 
       setState((preState) => ({
@@ -163,6 +184,7 @@ export default function AddStudent() {
         paper2: '',
         paper3: '',
         result: '',
+        comments: '',
       }));
     } catch (error) {
       console.log(error);
@@ -173,7 +195,7 @@ export default function AddStudent() {
   return (
     <>
       <h1>
-        <u>Add Student and Marks</u>
+        <u>{state.id ? 'Edit Student data' : 'Add Student and Marks'}</u>
       </h1>
       <br></br>
       <button type="button">
@@ -231,6 +253,7 @@ export default function AddStudent() {
           id="enrollmentnum"
           value={state.enrollmentnum}
           onChange={handleChange}
+          disabled={state.id ? true : false}
         />
         <hr></hr>
 
@@ -346,6 +369,7 @@ export default function AddStudent() {
           id="paper1"
           onChange={handleChange}
           value={state.paper1}
+          disabled={state.id ? true : false}
         />
         <hr></hr>
 
@@ -359,6 +383,7 @@ export default function AddStudent() {
           id="paper2"
           onChange={handleChange}
           value={state.paper2}
+          disabled={state.id ? true : false}
         />
         <hr></hr>
 
@@ -372,10 +397,22 @@ export default function AddStudent() {
           id="paper3"
           value={state.paper3}
           onChange={handleChange}
+          disabled={state.id ? true : false}
         />
         <hr></hr>
-
-        <button>Submit Form</button>
+        <label for="comments">
+          <b>Comments</b>
+        </label>
+        <br></br>
+        <textarea
+          value={state.comments}
+          onChange={handleChange}
+          name="comments"
+        ></textarea>
+        <br></br>
+        <div>
+          <button>Submit Form</button>
+        </div>
       </form>
     </>
   );

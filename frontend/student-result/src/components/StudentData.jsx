@@ -48,14 +48,6 @@ export default function StudentData() {
     })} ${d.getFullYear()}`;
   }
 
-  function formatDateforDateBox(date) {
-    const d = new Date(date);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
-      2,
-      '0'
-    )}-${String(d.getDate()).padStart(2, '0')}`;
-  }
-
   function handleChange(e) {
     const { name, type, value, checked } = e.target;
     if (type == 'checkbox') {
@@ -174,7 +166,9 @@ export default function StudentData() {
   return (
     <>
       <h1>This is student data</h1>
-
+      <button type="button">
+        <Link to="/addstudent">Add Student</Link>
+      </button>
       <form onSubmit={handleFilters}>
         <h2>Search</h2>
         <div>
@@ -323,139 +317,26 @@ export default function StudentData() {
           {state.students.map((stud) => {
             return (
               <tr key={stud._id}>
-                <td>
-                  <input type="text" name="name" id="name" value={stud.name} />
-                </td>
-                <td>
-                  <input
-                    type="date"
-                    name="birthdate"
-                    id="birthdate"
-                    value={formatDateforDateBox(stud.birthdate)}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    value={stud.email}
-                  />
-                </td>
+                <td>{stud.name}</td>
+                <td>{stud.birthdate ? formatDate(stud.birthdate) : ''}</td>
+                <td>{stud.email}</td>
                 <td>{stud.enrollmentnum}</td>
-                <td>
-                  <input
-                    type="radio"
-                    value="Male"
-                    name={'gender-' + stud._id}
-                    checked={stud.gender === 'Male'}
-                    onChange={(e) => {}}
-                  ></input>
-                  <label>Male</label>
-                  <input
-                    onChange={(e) => {}}
-                    type="radio"
-                    value="Female"
-                    name={'gender-' + stud._id}
-                    checked={stud.gender === 'Female'}
-                  ></input>
-                  <label>Female</label>
-                </td>
-                <td>
-                  <input
-                    type="checkbox"
-                    onChange={() => {}}
-                    value="Reading"
-                    checked={stud.hobbies.includes('Reading')}
-                  ></input>
-                  <label>Reading</label>
-                  <input
-                    type="checkbox"
-                    onChange={() => {}}
-                    value="Sports"
-                    checked={stud.hobbies.includes('Sports')}
-                  ></input>
-                  <label>Sports</label>
-                  <input
-                    type="checkbox"
-                    onChange={() => {}}
-                    value="Writing"
-                    checked={stud.hobbies.includes('Writing')}
-                  ></input>
-                  <label>Writing</label>
-                  <input
-                    type="checkbox"
-                    onChange={() => {}}
-                    value="Singing"
-                    checked={stud.hobbies.includes('Singing')}
-                  ></input>
-                  <label>Singing</label>
-                  <input
-                    type="checkbox"
-                    onChange={() => {}}
-                    value="Dancing"
-                    checked={stud.hobbies.includes('Dancing')}
-                  ></input>
-                  <label>Dancing</label>
-                  <input
-                    type="checkbox"
-                    onChange={() => {}}
-                    value="Travelling"
-                    checked={stud.hobbies.includes('Travelling')}
-                  ></input>
-                  <label>Travelling</label>
-                </td>
-                <td>
-                  <select
-                    name="semester"
-                    value={stud.semester}
-                    onChange={() => {}}
-                  >
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                  </select>
-                </td>
-                <td>
-                  {/* <input
-                    style={{ width: '40px' }}
-                    type="number"
-                    name="paper1"
-                    id="paper1"
-                    value={stud.paper1}
-                  /> */}
-                  {stud.paper1}
-                </td>
-                <td>
-                  {/* <input
-                    style={{ width: '40px' }}
-                    type="number"
-                    name="paper2"
-                    id="paper2"
-                    value={stud.paper2}
-                  /> */}
-                  {stud.paper2}
-                </td>
-                <td>
-                  {/* <input
-                    style={{ width: '40px' }}
-                    type="number"
-                    name="paper3"
-                    id="paper3"
-                    max={100}
-                    value={stud.paper3}
-                  /> */}
-                  {stud.paper3}
-                </td>
+                <td>{stud.gender}</td>
+                <td>{stud.hobbies.toString()}</td>
+                <td>{stud.semester}</td>
+                <td>{stud.paper1}</td>
+                <td>{stud.paper2}</td>
+                <td>{stud.paper3}</td>
                 <td>{stud.result}</td>
-                <td>
-                  <textarea value={stud.comments} name="comments"></textarea>
-                </td>
+                <td>{stud.comments ? stud.comments : '--'}</td>
                 <td>{formatDate(stud.createdAt)}</td>
                 <td>
                   <button onClick={() => handleDelete(stud._id)}>Delete</button>
-                  <button>Edit</button>
+                  <button>
+                    <Link to="/addstudent" state={{ student: stud }}>
+                      Edit
+                    </Link>
+                  </button>
                 </td>
               </tr>
             );
@@ -464,9 +345,6 @@ export default function StudentData() {
       </table>
       <br></br>
       <br></br>
-      <button type="button">
-        <Link to="/addstudent">Add Student</Link>
-      </button>
     </>
   );
 }
