@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 //todo::
 //Aggregate
 //Sort - done
-//filter
+//filter - done
 //case insesitive search on db - done
 //search - done
 //a backend check for hobbies - done

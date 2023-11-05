@@ -14,23 +14,23 @@ router.get('/', async (req, res) => {
     /*--------------------SORT STARTS--------------------------*/
     if (req.query.sort) {
       if (req.query.sort == 'asc') {
-        if (req.query.sortByName) {
+        if (req.query.sortBy == 'sortByName') {
           sortObj.name = 1;
         }
-        if (req.query.sortByResult) {
+        if (req.query.sortBy == 'sortByResult') {
           sortObj.result = 1;
         }
-        if (req.query.sortByCreatedAt) {
+        if (req.query.sortBy == 'sortByCreatedAt') {
           sortObj.createdAt = 1;
         }
       } else {
-        if (req.query.sortByName) {
+        if (req.query.sortBy == 'sortByName') {
           sortObj.name = -1;
         }
-        if (req.query.sortByResult) {
+        if (req.query.sortBy == 'sortByResult') {
           sortObj.result = -1;
         }
-        if (req.query.sortByCreatedAt) {
+        if (req.query.sortBy == 'sortByCreatedAt') {
           sortObj.createdAt = -1;
         }
       }
@@ -48,7 +48,16 @@ router.get('/', async (req, res) => {
         Either go for regex or collation
       */
 
-      var regex = new RegExp(['^', req.query.searchByName, '$'].join(''), 'i');
+      //Finds only that starts with
+      //var regex = new RegExp(['^', req.query.searchByName].join(''), 'i');
+
+      //Anywhere the str appears
+      //var regex = new RegExp( req.query.searchByName, 'i');
+
+      //Exact match for case insesitive
+      //var regex = new RegExp(['^', req.query.searchByName,'$'].join(''), 'i');
+
+      var regex = new RegExp(['^', req.query.searchByName].join(''), 'i');
       searchObj.name = regex;
       // searchObj.name = req.query.searchByName;
       //query = query.find(searchObj).collation({ locale: 'en', strength: 2 });
@@ -79,14 +88,18 @@ router.get('/', async (req, res) => {
     //Based on date
     if (req.query.startDate || req.query.endDate) {
       const ltgt = {};
+
+      //Did this bcz we need all inclusive date
+      const endDate = new Date(req.query.endDate);
+      endDate.setDate(endDate.getDate() + 1);
+
       if (req.query.startDate) ltgt.$gte = new Date(req.query.startDate);
-      if (req.query.endDate) ltgt.$lte = new Date(req.query.endDate);
+      if (req.query.endDate) ltgt.$lte = endDate;
       searchObj.createdAt = ltgt;
     }
 
     /*--------------------FILTER ENDS--------------------------*/
 
-    console.log(searchObj);
     query = query.find(searchObj);
     const students = await query;
     res.status(200).json({

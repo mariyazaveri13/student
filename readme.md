@@ -44,9 +44,10 @@ Update and Delete functionality.
 On update and Delete run validations on Frontend and backend and show alert appropriately.
 
 Sort :
-Name
-Result
-CreatedAt
+
+    Name
+    Result
+    CreatedAt
 
 Search :
 
@@ -55,8 +56,9 @@ Search :
     enrollmentnum
 
 Filter:
-Filter marks less than and more than entered
-Filter date more than and less than
+
+    Filter marks less than and more than entered
+    Filter date more than and less than
 
 ### Add students page
 
