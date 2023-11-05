@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { Icon, Message, Button, Form, TextArea, Grid } from 'semantic-ui-react';
 
 export default function AddStudent(props) {
   const location = useLocation();
@@ -22,6 +23,13 @@ export default function AddStudent(props) {
     comments: student.comments ? student.comments : '',
   });
 
+  const semOptions = [
+    { key: 1, value: 1, text: 1 },
+    { key: 2, value: 2, text: 2 },
+    { key: 3, value: 3, text: 3 },
+    { key: 4, value: 4, text: 4 },
+  ];
+
   function formatDateforDateBox(date) {
     const d = new Date(date);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
@@ -42,8 +50,9 @@ export default function AddStudent(props) {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(str);
   }
 
-  function handleChange(e) {
+  function handleChange(e, data) {
     const { name, type, value, checked } = e.target;
+    console.log(data);
     if (type == 'checkbox') {
       if (checked) {
         setState((preState) => {
@@ -60,6 +69,13 @@ export default function AddStudent(props) {
           };
         });
       }
+    }
+    //Below if block specifically for dropdowns
+    else if (data.name == 'semester' && data.value) {
+      setState((preState) => ({
+        ...preState,
+        semester: data.value,
+      }));
     } else {
       setState((preState) => {
         return {
@@ -194,226 +210,213 @@ export default function AddStudent(props) {
 
   return (
     <>
-      <h1>
-        <u>{state.id ? 'Edit Student data' : 'Add Student and Marks'}</u>
-      </h1>
-      <br></br>
-      <button type="button">
-        <Link to="/">Home</Link>
-      </button>
-      <br></br>
-      <br></br>
-      <form onSubmit={handleSubmit}>
-        <label for="name">
-          <b>Name</b>
-        </label>
-        <br></br>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          value={state.name}
-          onChange={handleChange}
-        ></input>
-        <hr></hr>
+      <Grid centered style={{ width: '100vw' }}>
+        <Grid.Column style={{ width: '70vw' }}>
+          <br></br>
+          <Grid.Row>
+            <Link to="/">
+              <Button type="button" icon labelPosition="left">
+                <Icon name="home" />
+                Home
+              </Button>
+            </Link>
+          </Grid.Row>
+          <br></br>
+          <Grid.Row>
+            <Message
+              size="huge"
+              attached
+              header={state.id ? 'Edit Student data' : 'Add Student and Marks'}
+            />
+            <Form
+              className="attached fluid segment"
+              size="large"
+              onSubmit={handleSubmit}
+            >
+              <Form.Group widths="equal">
+                <Form.Input
+                  label="Name"
+                  name="name"
+                  id="name"
+                  value={state.name}
+                  onChange={handleChange}
+                ></Form.Input>
 
-        <label for="birthdate">
-          <b>Birthdate</b>
-        </label>
-        <br></br>
-        <input
-          type="date"
-          value={state.birthdate}
-          onChange={handleChange}
-          name="birthdate"
-          id="birthdate"
-        ></input>
-        <hr></hr>
+                <Form.Input
+                  type="date"
+                  label="Birthdate"
+                  name="birthdate"
+                  id="birthdate"
+                  value={state.birthdate}
+                  onChange={handleChange}
+                ></Form.Input>
+              </Form.Group>
 
-        <label for="email">
-          <b>Email</b>
-        </label>
-        <br></br>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          onChange={handleChange}
-          value={state.email}
-        />
-        <hr></hr>
+              <Form.Group widths="equal">
+                <Form.Input
+                  type="email"
+                  label="Email"
+                  name="email"
+                  id="email"
+                  value={state.email}
+                  onChange={handleChange}
+                ></Form.Input>
+                <Form.Input
+                  type="number"
+                  label="Enrollment Number"
+                  name="enrollmentnum"
+                  id="enrollmentnum"
+                  value={state.enrollmentnum}
+                  onChange={handleChange}
+                  disabled={state.id ? true : false}
+                ></Form.Input>
+              </Form.Group>
 
-        <label for="enrollmentnum">
-          <b>Enrollment Number</b>
-        </label>
-        <br></br>
-        <input
-          type="number"
-          name="enrollmentnum"
-          id="enrollmentnum"
-          value={state.enrollmentnum}
-          onChange={handleChange}
-          disabled={state.id ? true : false}
-        />
-        <hr></hr>
+              <Form.Group widths={'equal'}>
+                <Form.Field>
+                  <label>Gender</label>
+                  <Form.Radio
+                    value="Male"
+                    id="Male"
+                    name="gender"
+                    label="Male"
+                    checked={state.gender === 'Male'}
+                    onChange={handleChange}
+                  ></Form.Radio>
+                  <Form.Radio
+                    value="Female"
+                    id="Female"
+                    name="gender"
+                    label="Female"
+                    checked={state.gender === 'Female'}
+                    onChange={handleChange}
+                  ></Form.Radio>
+                </Form.Field>
+                <Form.Field>
+                  <label>Hobbies</label>
+                  <Form.Checkbox
+                    label="Reading"
+                    onChange={handleChange}
+                    value="Reading"
+                    name="hobbies"
+                    checked={state.hobbies.includes('Reading')}
+                    id="Reading"
+                  />
+                  <Form.Checkbox
+                    label="Sports"
+                    onChange={handleChange}
+                    value="Sports"
+                    name="hobbies"
+                    checked={state.hobbies.includes('Sports')}
+                    id="Sports"
+                  />
+                  <Form.Checkbox
+                    label="Writing"
+                    onChange={handleChange}
+                    value="Writing"
+                    name="hobbies"
+                    checked={state.hobbies.includes('Writing')}
+                    id="Writing"
+                  />
+                  <Form.Checkbox
+                    label="Singing"
+                    onChange={handleChange}
+                    value="Singing"
+                    name="hobbies"
+                    checked={state.hobbies.includes('Singing')}
+                    id="Singing"
+                  />
+                  <Form.Checkbox
+                    label="Dancing"
+                    onChange={handleChange}
+                    value="Dancing"
+                    name="hobbies"
+                    checked={state.hobbies.includes('Dancing')}
+                    id="Dancing"
+                  />
+                  <Form.Checkbox
+                    label="Travelling"
+                    onChange={handleChange}
+                    value="Travelling"
+                    name="hobbies"
+                    checked={state.hobbies.includes('Travelling')}
+                    id="Travelling"
+                  />
+                </Form.Field>
+              </Form.Group>
 
-        <label for="gender">
-          <b>Gender</b>
-        </label>
-        <br></br>
-        <input
-          type="radio"
-          value="Male"
-          name="gender"
-          checked={state.gender === 'Male'}
-          onChange={(e) => {
-            handleChange(e);
-          }}
-        ></input>
-        <label>Male</label>
-        <input
-          onChange={(e) => {
-            handleChange(e);
-          }}
-          type="radio"
-          value="Female"
-          name="gender"
-          checked={state.gender === 'Female'}
-        ></input>
-        <label>Female</label>
-        <hr></hr>
+              <Form.Group widths={'equal'}>
+                <Form.Field>
+                  <label>Semester</label>
+                  <Form.Dropdown
+                    selection
+                    fluid
+                    options={semOptions}
+                    onChange={(e, data) => handleChange(e, data)}
+                    value={state.semester}
+                    id="semester"
+                    name="semester"
+                  ></Form.Dropdown>
+                </Form.Field>
+                <Form.Field>
+                  <Form.Input
+                    type="number"
+                    label="Paper 1"
+                    name="paper1"
+                    id="paper1"
+                    value={state.paper1}
+                    onChange={handleChange}
+                    disabled={state.id ? true : false}
+                  ></Form.Input>
+                </Form.Field>
+              </Form.Group>
 
-        <label for="hobbies">
-          <b>Hobbies</b>
-        </label>
-        <br></br>
-        <input
-          type="checkbox"
-          onChange={(e) => {
-            handleChange(e);
-          }}
-          value="Reading"
-          name="hobbies"
-          checked={state.hobbies.includes('Reading')}
-        ></input>
-        <label>Reading</label>
-        <input
-          type="checkbox"
-          onChange={handleChange}
-          value="Sports"
-          name="hobbies"
-          checked={state.hobbies.includes('Sports')}
-        ></input>
-        <label>Sports</label>
-        <input
-          type="checkbox"
-          onChange={(e) => {
-            handleChange(e);
-          }}
-          value="Writing"
-          name="hobbies"
-          checked={state.hobbies.includes('Writing')}
-        ></input>
-        <label>Writing</label>
-        <input
-          type="checkbox"
-          onChange={(e) => {
-            handleChange(e);
-          }}
-          value="Singing"
-          name="hobbies"
-          checked={state.hobbies.includes('Singing')}
-        ></input>
-        <label>Singing</label>
-        <input
-          name="hobbies"
-          type="checkbox"
-          onChange={(e) => {
-            handleChange(e);
-          }}
-          value="Dancing"
-          checked={state.hobbies.includes('Dancing')}
-        ></input>
-        <label>Dancing</label>
-        <input
-          name="hobbies"
-          type="checkbox"
-          onChange={(e) => {
-            handleChange(e);
-          }}
-          value="Travelling"
-          checked={state.hobbies.includes('Travelling')}
-        ></input>
-        <label>Travelling</label>
-        <hr></hr>
-
-        <label for="semester">
-          <b>Semester</b>
-        </label>
-        <br></br>
-        <select name="semester" onChange={handleChange} value={state.semester}>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select>
-        <hr></hr>
-
-        <label for="paper1">
-          <b>Paper 1</b>
-        </label>
-        <br></br>
-        <input
-          type="number"
-          name="paper1"
-          id="paper1"
-          onChange={handleChange}
-          value={state.paper1}
-          disabled={state.id ? true : false}
-        />
-        <hr></hr>
-
-        <label for="paper2">
-          <b>Paper 2</b>
-        </label>
-        <br></br>
-        <input
-          type="number"
-          name="paper2"
-          id="paper2"
-          onChange={handleChange}
-          value={state.paper2}
-          disabled={state.id ? true : false}
-        />
-        <hr></hr>
-
-        <label for="paper3">
-          <b>Paper 3</b>
-        </label>
-        <br></br>
-        <input
-          type="number"
-          name="paper3"
-          id="paper3"
-          value={state.paper3}
-          onChange={handleChange}
-          disabled={state.id ? true : false}
-        />
-        <hr></hr>
-        <label for="comments">
-          <b>Comments</b>
-        </label>
-        <br></br>
-        <textarea
-          value={state.comments}
-          onChange={handleChange}
-          name="comments"
-        ></textarea>
-        <br></br>
-        <div>
-          <button>Submit Form</button>
-        </div>
-      </form>
+              <Form.Group widths={'equal'}>
+                <Form.Field>
+                  <Form.Input
+                    type="number"
+                    label="Paper 2"
+                    name="paper2"
+                    id="paper2"
+                    value={state.paper2}
+                    onChange={handleChange}
+                    disabled={state.id ? true : false}
+                  ></Form.Input>
+                </Form.Field>
+                <Form.Field>
+                  <Form.Input
+                    type="number"
+                    label="Paper 3"
+                    name="paper3"
+                    id="paper3"
+                    value={state.paper3}
+                    onChange={handleChange}
+                    disabled={state.id ? true : false}
+                  ></Form.Input>
+                </Form.Field>
+              </Form.Group>
+              {state.id && (
+                <div>
+                  <label for="comments">
+                    <b>Comments</b>
+                  </label>
+                  <br></br>
+                  <TextArea
+                    value={state.comments}
+                    onChange={handleChange}
+                    name="comments"
+                    placeholder="Comments"
+                  ></TextArea>
+                </div>
+              )}
+              <br></br>
+              <div>
+                <Button primary>Submit Form</Button>
+              </div>
+            </Form>
+          </Grid.Row>
+        </Grid.Column>
+      </Grid>
     </>
   );
 }
