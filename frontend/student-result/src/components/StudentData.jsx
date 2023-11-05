@@ -1,6 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import {
+  Table,
+  Grid,
+  Icon,
+  Button,
+  Card,
+  Image,
+  Message,
+  Container,
+  Header,
+  Accordion,
+  Form,
+} from 'semantic-ui-react';
 
 export default function StudentData() {
   const [state, setState] = useState({
@@ -22,6 +35,15 @@ export default function StudentData() {
     startDate: '',
     endDate: '',
   });
+
+  const [activeIndex, setActiveIndex] = useState(-1);
+
+  function handleClick(e, titleProps) {
+    const { index } = titleProps;
+    const newIndex = activeIndex === index ? -1 : index;
+
+    setActiveIndex(newIndex);
+  }
 
   useEffect(() => {
     fetchData();
@@ -165,186 +187,201 @@ export default function StudentData() {
 
   return (
     <>
-      <h1>This is student data</h1>
-      <button type="button">
-        <Link to="/addstudent">Add Student</Link>
-      </button>
-      <form onSubmit={handleFilters}>
-        <h2>Search</h2>
-        <div>
-          <input
-            type="text"
-            name="searchByName"
-            onChange={handleChange}
-            placeholder="Search by Name"
-            value={state.searchByName}
-          />
-          <input
-            type="text"
-            name="searchByEmail"
-            onChange={handleChange}
-            placeholder="Search by email"
-            value={state.searchByEmail}
-          />
-          <input
-            type="number"
-            name="searchByEnroll"
-            onChange={handleChange}
-            placeholder="Search by enrollnum"
-            value={state.searchByEnroll}
-          />
-        </div>
-        <h2>Sort</h2>
-        <div>
-          <input
-            type="radio"
-            name="sortBy"
-            id="sortByName"
-            value="sortByName"
-            onChange={handleChange}
-            checked={'sortByName' === state.sortBy}
-          ></input>
-          <label htmlFor="sortByName">Sort By Name</label>
-          <input
-            type="radio"
-            name="sortBy"
-            id="sortByResult"
-            value="sortByResult"
-            onChange={handleChange}
-            checked={'sortByResult' === state.sortBy}
-          ></input>
-          <label htmlFor="sortByResult">Sort By Result</label>
-
-          <input
-            type="radio"
-            name="sortBy"
-            id="sortByCreatedAt"
-            value="sortByCreatedAt"
-            onChange={handleChange}
-            checked={'sortByCreatedAt' === state.sortBy}
-          ></input>
-          <label htmlFor="sortByCreatedAt">Sort By Created Date</label>
-        </div>
-        <div>
-          <input
-            type="radio"
-            name="sort"
-            id="asc"
-            value="asc"
-            onChange={handleChange}
-            checked={'asc' === state.sort}
-          ></input>
-          <label htmlFor="asc">Ascending</label>
-          <input
-            type="radio"
-            name="sort"
-            id="desc"
-            value="desc"
-            onChange={handleChange}
-            checked={'desc' === state.sort}
-          ></input>
-          <label htmlFor="desc">Descending</label>
-        </div>
-        <h2>Filter</h2>
-        <div>
-          <input
-            type="text"
-            name="lessThanResult"
-            onChange={handleChange}
-            placeholder="Less than result marks"
-            value={state.lessThanResult}
-          />
-          <input
-            type="text"
-            name="moreThanResult"
-            onChange={handleChange}
-            placeholder="More than result marks"
-            value={state.moreThanResult}
-          />
-
-          <br></br>
-          <br></br>
-
-          <label>Start Date</label>
-          <input
-            type="date"
-            name="startDate"
-            onChange={handleChange}
-            value={state.startDate}
-          />
-
-          <label>End Date</label>
-          <input
-            type="date"
-            name="endDate"
-            onChange={handleChange}
-            value={state.endDate}
-          />
-          <br></br>
-          <br></br>
-        </div>
-
-        <div>
-          <button>Submit</button>
-          <button type="button" onClick={handleReset}>
-            Reset
-          </button>
-        </div>
+      <Container>
         <br></br>
+        <Header as={'h1'} content="Student Overview" />
+        <Link to="/addstudent">
+          <Button type="button" icon labelPosition="left">
+            <Icon name="add" />
+            Add Student
+          </Button>
+          <br></br>
+        </Link>
         <br></br>
-      </form>
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Birthdate</th>
-            <th>email</th>
-            <th>enrollmentnum</th>
-            <th>gender</th>
-            <th>hobbies</th>
-            <th>semester</th>
-            <th>paper1</th>
-            <th>paper2</th>
-            <th>paper3</th>
-            <th>result</th>
-            <th>comments</th>
-            <th>createdat</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {state.students.map((stud) => {
-            return (
-              <tr key={stud._id}>
-                <td>{stud.name}</td>
-                <td>{stud.birthdate ? formatDate(stud.birthdate) : ''}</td>
-                <td>{stud.email}</td>
-                <td>{stud.enrollmentnum}</td>
-                <td>{stud.gender}</td>
-                <td>{stud.hobbies.toString()}</td>
-                <td>{stud.semester}</td>
-                <td>{stud.paper1}</td>
-                <td>{stud.paper2}</td>
-                <td>{stud.paper3}</td>
-                <td>{stud.result}</td>
-                <td>{stud.comments ? stud.comments : '--'}</td>
-                <td>{formatDate(stud.createdAt)}</td>
-                <td>
-                  <button onClick={() => handleDelete(stud._id)}>Delete</button>
-                  <button>
-                    <Link to="/addstudent" state={{ student: stud }}>
-                      Edit
-                    </Link>
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <br></br>
-      <br></br>
+        <Accordion fluid styled>
+          <Accordion.Title
+            active={activeIndex === 0}
+            index={0}
+            onClick={handleClick}
+          >
+            <Icon name="dropdown" />
+            Filters
+          </Accordion.Title>
+          <Accordion.Content active={activeIndex === 0}>
+            <Form onSubmit={handleFilters}>
+              <Header as="h3">Search</Header>
+              <Form.Group widths={'equal'}>
+                <Form.Input
+                  type="text"
+                  name="searchByName"
+                  onChange={handleChange}
+                  placeholder="Search by Name"
+                  value={state.searchByName}
+                />
+                <Form.Input
+                  type="email"
+                  name="searchByEmail"
+                  onChange={handleChange}
+                  placeholder="Search by Email"
+                  value={state.searchByEmail}
+                />
+                <Form.Input
+                  type="number"
+                  name="searchByEnroll"
+                  onChange={handleChange}
+                  placeholder="Search by Enrollment Number"
+                  value={state.searchByEnroll}
+                />
+              </Form.Group>
+              <Header as="h3">Sort</Header>
+              <Form.Group>
+                <Form.Radio
+                  name="sort"
+                  id="asc"
+                  value="asc"
+                  onChange={handleChange}
+                  label="Ascending"
+                  checked={'asc' === state.sort}
+                ></Form.Radio>
+                <Form.Radio
+                  name="sort"
+                  id="desc"
+                  value="desc"
+                  onChange={handleChange}
+                  checked={'desc' === state.sort}
+                  label="Descending"
+                ></Form.Radio>
+              </Form.Group>
+              <Form.Group>
+                <Form.Radio
+                  type="radio"
+                  name="sortBy"
+                  id="sortByName"
+                  value="sortByName"
+                  onChange={handleChange}
+                  checked={'sortByName' === state.sortBy}
+                  label="Sort By Name"
+                ></Form.Radio>
+                <Form.Radio
+                  label="Sort By Result"
+                  name="sortBy"
+                  id="sortByResult"
+                  value="sortByResult"
+                  onChange={handleChange}
+                  checked={'sortByResult' === state.sortBy}
+                ></Form.Radio>
+                <Form.Radio
+                  label="Sort By Created Date"
+                  name="sortBy"
+                  id="sortByCreatedAt"
+                  value="sortByCreatedAt"
+                  onChange={handleChange}
+                  checked={'sortByCreatedAt' === state.sortBy}
+                ></Form.Radio>
+              </Form.Group>
+
+              <Header as="h3">Filter</Header>
+              <Form.Group widths={'equal'}>
+                <Form.Input
+                  type="text"
+                  name="lessThanResult"
+                  label="Less than result marks"
+                  onChange={handleChange}
+                  placeholder="Less than result marks"
+                  value={state.lessThanResult}
+                />
+                <Form.Input
+                  type="text"
+                  label="More than result marks"
+                  name="moreThanResult"
+                  onChange={handleChange}
+                  placeholder="More than result marks"
+                  value={state.moreThanResult}
+                />
+                <Form.Input
+                  type="date"
+                  label="Start Date"
+                  name="startDate"
+                  onChange={handleChange}
+                  value={state.startDate}
+                />
+
+                <Form.Input
+                  label="End Date"
+                  type="date"
+                  name="endDate"
+                  onChange={handleChange}
+                  value={state.endDate}
+                />
+              </Form.Group>
+
+              <Button secondary>Submit</Button>
+              <Button type="button" onClick={handleReset}>
+                Reset
+              </Button>
+            </Form>
+          </Accordion.Content>
+        </Accordion>
+        <br></br>
+
+        <div>
+          <Header size="huge" content="Student details"></Header>
+
+          <Card.Group>
+            {state.students.map((stud) => {
+              return (
+                <Card>
+                  <Card.Content>
+                    <Image
+                      floated="right"
+                      size="mini"
+                      src={
+                        stud.gender == 'Male'
+                          ? 'https://react.semantic-ui.com/images/avatar/large/steve.jpg'
+                          : 'https://react.semantic-ui.com/images/avatar/large/molly.png'
+                      }
+                    />
+                    <Card.Header>{stud.name}</Card.Header>
+                    <Card.Meta>{stud.email}</Card.Meta>
+                    <Card.Description>
+                      <strong>Result : </strong>
+                      {stud.result}
+                      <br></br>
+                      <strong>Gender : </strong>
+                      {stud.gender}
+                      <br></br>
+                      <strong>Semester : </strong>
+                      {stud.semester}
+                      <br></br>
+                      <strong>Hobbies : </strong>
+                      {stud.hobbies.toString()}
+                    </Card.Description>
+                  </Card.Content>
+                  <Card.Content extra>
+                    <div className="ui two buttons">
+                      <Button
+                        onClick={() => handleDelete(stud._id)}
+                        basic
+                        color="red"
+                        icon
+                      >
+                        <Icon name="trash" />
+                      </Button>
+
+                      <Button icon basic color="green">
+                        <Link to="/addstudent" state={{ student: stud }}>
+                          <Icon name="edit" color="green" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </Card.Content>
+                </Card>
+              );
+            })}
+          </Card.Group>
+        </div>
+      </Container>
     </>
   );
 }
